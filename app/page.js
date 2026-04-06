@@ -11,6 +11,9 @@ const DEFAULT_TASKS = [
 ];
 
 const STORAGE_KEY = "pepa-checklist-v2";
+const BRAND = "#00ABBD";
+const BRAND_LIGHT = "#e6f8fb";
+const BRAND_DARK = "#0b7285";
 
 function getTodayKey() {
   const d = new Date();
@@ -55,7 +58,7 @@ function getBarColor(percent) {
   if (percent < 40) return "#dc2626";
   if (percent < 70) return "#f59e0b";
   if (percent < 100) return "#2563eb";
-  return "#16a34a";
+  return BRAND;
 }
 
 function getMotivationBoxStyle(percent) {
@@ -68,7 +71,7 @@ function getMotivationBoxStyle(percent) {
   if (percent < 100) {
     return { bg: "#fff4dd", icon: "🔥" };
   }
-  return { bg: "#e8f7ea", icon: "✅" };
+  return { bg: BRAND_LIGHT, icon: "✅" };
 }
 
 export default function Page() {
@@ -334,27 +337,17 @@ export default function Page() {
                       cursor: "pointer",
                       textAlign: "left",
                     }}
-                    title="Rozbalit mantru"
+                    title="Mantra"
                   >
                     <div
                       style={{
-                        fontSize: "28px",
+                        fontSize: "19px",
                         fontWeight: 800,
-                        lineHeight: 1.2,
+                        lineHeight: 1.25,
                         color: "#0f172a",
                       }}
                     >
                       Tady a teď. V pravdě. V míru se sebou.
-                    </div>
-                    <div
-                      style={{
-                        marginTop: "6px",
-                        fontSize: "14px",
-                        color: "#64748b",
-                        fontWeight: 600,
-                      }}
-                    >
-                      {showMantra ? "Skrýt legendu ▲" : "Zobrazit legendu ▼"}
                     </div>
                   </button>
 
@@ -363,7 +356,7 @@ export default function Page() {
                       style={{
                         marginTop: "14px",
                         background: "#ffffff",
-                        border: "1px solid #d1d5db",
+                        border: `1px solid ${BRAND}`,
                         borderRadius: "18px",
                         padding: "16px",
                         lineHeight: 1.6,
@@ -524,9 +517,9 @@ export default function Page() {
                         gridTemplateColumns: "auto 1fr auto",
                         gap: "14px",
                         alignItems: "center",
-                        background: checked ? "#f0fdf4" : "#f8fafc",
+                        background: checked ? BRAND_LIGHT : "#f8fafc",
                         border: checked
-                          ? "1px solid #22c55e"
+                          ? `1px solid ${BRAND}`
                           : "1px solid #d1d5db",
                         borderRadius: "22px",
                         padding: "14px 16px",
@@ -540,9 +533,9 @@ export default function Page() {
                           height: "26px",
                           borderRadius: "6px",
                           border: checked
-                            ? "1.5px solid #16a34a"
+                            ? `1.5px solid ${BRAND}`
                             : "1.5px solid #8b8b8b",
-                          background: checked ? "#16a34a" : "#fff",
+                          background: checked ? BRAND : "#fff",
                           color: checked ? "#fff" : "transparent",
                           cursor: "pointer",
                           fontWeight: 800,
@@ -567,23 +560,11 @@ export default function Page() {
                           fontWeight: checked ? 800 : 700,
                           cursor: "pointer",
                           userSelect: "none",
-                          color: checked ? "#166534" : "#0f172a",
+                          color: checked ? BRAND_DARK : "#0f172a",
                         }}
                         title={isMartaTask ? "Zobrazit cvičení" : "Zaškrtnout"}
                       >
                         {task}
-                        {isMartaTask && (
-                          <span
-                            style={{
-                              marginLeft: "10px",
-                              fontSize: "13px",
-                              color: "#64748b",
-                              fontWeight: 600,
-                            }}
-                          >
-                            (klik = obrázek)
-                          </span>
-                        )}
                       </div>
 
                       <button
@@ -644,7 +625,7 @@ export default function Page() {
                     padding: "0 18px",
                     borderRadius: "14px",
                     border: "none",
-                    background: "#2563eb",
+                    background: BRAND,
                     color: "#fff",
                     fontWeight: 700,
                     cursor: "pointer",
@@ -677,7 +658,7 @@ export default function Page() {
                       background: "#fff",
                       border:
                         selectedDate === day.key
-                          ? "2px solid #93c5fd"
+                          ? `2px solid ${BRAND}`
                           : "1px solid #d1d5db",
                       borderRadius: "18px",
                       padding: "12px",
@@ -705,7 +686,7 @@ export default function Page() {
                           height: "100%",
                           background:
                             day.pct === 100
-                              ? "#16a34a"
+                              ? BRAND
                               : day.pct > 0
                               ? "#94a3b8"
                               : "#cbd5e1",
@@ -735,7 +716,7 @@ export default function Page() {
                 ✓ Data zůstávají uložená v tomto zařízení.<br />
                 ✓ Položky můžeš přidat nebo smazat.<br />
                 ✓ Na mobilu se pravý sloupec přesune pod úkoly.<br />
-                ✓ Zaškrtnuté položky zezelenají.<br />
+                ✓ Zaškrtnuté položky mají tyrkysovou barvu.<br />
                 ✓ U Marťi klik na text otevře obrázek.<br />
                 ✓ Zaškrtnutí Marťi děláš přes checkbox vlevo.<br />
                 ✓ Nahoře máš svou mantru a její legendu.
