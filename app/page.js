@@ -46,11 +46,13 @@ function normalizeDayData(dayData, tasks) {
   return checked;
 }
 
-function getMotivation(percent) {
-  if (percent === 0) return "Začni jednou věcí. Stačí.";
-  if (percent < 40) return "Rozjíždíš to. Hlavně pokračuj.";
-  if (percent < 70) return "Jsi v rytmu. Nezastavuj.";
-  if (percent < 100) return "Dneska to dáš celé.";
+function getMotivation(doneCount, totalCount) {
+  if (totalCount === 0) return "Začni jednou věcí. Stačí.";
+  if (doneCount === 0) return "Začni jednou věcí. Stačí.";
+  if (doneCount === 1) return "První krok je hotový. Jen pokračuj.";
+  if (doneCount === 2) return "Už se do toho dostáváš.";
+  if (doneCount === 3) return "Jsi v rytmu. Nezastavuj.";
+  if (doneCount < totalCount) return "Dneska to dáš celé.";
   return "Hotovo. Dej si double-pašáka!";
 }
 
@@ -341,7 +343,7 @@ export default function Page() {
                   >
                     <div
                       style={{
-                        fontSize: "19px",
+                        fontSize: "21px",
                         fontWeight: 800,
                         lineHeight: 1.25,
                         color: "#0f172a",
@@ -355,17 +357,17 @@ export default function Page() {
                     <div
                       style={{
                         marginTop: "14px",
-                        background: "#ffffff",
+                        background: BRAND,
                         border: `1px solid ${BRAND}`,
                         borderRadius: "18px",
                         padding: "16px",
                         lineHeight: 1.6,
-                        color: "#334155",
+                        color: "#ffffff",
                         fontSize: "15px",
                       }}
                     >
                       <div style={{ marginBottom: "12px" }}>
-                        <div style={{ fontWeight: 800, color: "#0f172a", marginBottom: "4px" }}>
+                        <div style={{ fontWeight: 800, color: "#ffffff", marginBottom: "4px" }}>
                           Tady a teď
                         </div>
                         <div>Všímám si těla, dechu, prostoru kolem sebe.</div>
@@ -376,7 +378,7 @@ export default function Page() {
                       </div>
 
                       <div style={{ marginBottom: "12px" }}>
-                        <div style={{ fontWeight: 800, color: "#0f172a", marginBottom: "4px" }}>
+                        <div style={{ fontWeight: 800, color: "#ffffff", marginBottom: "4px" }}>
                           V pravdě
                         </div>
                         <div>
@@ -388,7 +390,7 @@ export default function Page() {
                       </div>
 
                       <div>
-                        <div style={{ fontWeight: 800, color: "#0f172a", marginBottom: "4px" }}>
+                        <div style={{ fontWeight: 800, color: "#ffffff", marginBottom: "4px" }}>
                           V míru se sebou
                         </div>
                         <div>Nepotřebuju hodnotit, srovnávat ani opravovat.</div>
@@ -499,7 +501,7 @@ export default function Page() {
                     {motivationStyle.icon}
                   </div>
                   <div style={{ fontSize: "18px", fontWeight: 800 }}>
-                    {getMotivation(percent)}
+                    {getMotivation(doneCount, totalCount)}
                   </div>
                 </div>
               </div>
