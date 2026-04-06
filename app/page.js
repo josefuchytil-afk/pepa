@@ -48,7 +48,7 @@ function getMotivation(percent) {
   if (percent < 40) return "Rozjíždíš to. Hlavně pokračuj.";
   if (percent < 70) return "Jsi v rytmu. Nezastavuj.";
   if (percent < 100) return "Dneska to dáš celé.";
-  return "Hotovo. Tohle se počítá.";
+  return "Hotovo. Dej si double-pašáka!";
 }
 
 function getBarColor(percent) {
@@ -77,6 +77,8 @@ export default function Page() {
   const [tasks, setTasks] = useState(DEFAULT_TASKS);
   const [history, setHistory] = useState({});
   const [newTask, setNewTask] = useState("");
+  const [showMantra, setShowMantra] = useState(false);
+  const [showImage, setShowImage] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -103,7 +105,8 @@ export default function Page() {
           ? parsed.tasks
           : DEFAULT_TASKS;
 
-      const parsedHistory = parsed.history && typeof parsed.history === "object" ? parsed.history : {};
+      const parsedHistory =
+        parsed.history && typeof parsed.history === "object" ? parsed.history : {};
 
       const normalizedHistory = {};
       for (const dateKey of Object.keys(parsedHistory)) {
@@ -268,85 +271,46 @@ export default function Page() {
   if (!mounted) return null;
 
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        background: "#edf2f7",
-        padding: "14px",
-        color: "#0f172a",
-        fontFamily: "Arial, sans-serif",
-      }}
-    >
-      <div
+    <>
+      <style jsx>{`
+        .page-grid {
+          display: grid;
+          grid-template-columns: 2fr 1.05fr;
+          gap: 16px;
+          align-items: start;
+        }
+
+        @media (max-width: 980px) {
+          .page-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}</style>
+
+      <main
         style={{
-          maxWidth: "1380px",
-          margin: "0 auto",
-          display: "grid",
-          gridTemplateColumns: "2fr 1.05fr",
-          gap: "16px",
-          alignItems: "start",
+          minHeight: "100vh",
+          background: "#edf2f7",
+          padding: "14px",
+          color: "#0f172a",
+          fontFamily: "Arial, sans-serif",
         }}
       >
-        <div style={{ minWidth: 0 }}>
-          <div
-            style={{
-              background: "#f8fafc",
-              border: "1px solid #d1d5db",
-              borderRadius: "24px",
-              padding: "18px",
-              boxShadow: "0 1px 2px rgba(0,0,0,0.03)",
-            }}
-          >
+        <div
+          className="page-grid"
+          style={{
+            maxWidth: "1380px",
+            margin: "0 auto",
+          }}
+        >
+          <div style={{ minWidth: 0 }}>
             <div
               style={{
-                display: "flex",
-                justifyContent: "space-between",
-                gap: "12px",
-                alignItems: "flex-start",
-                flexWrap: "wrap",
-                marginBottom: "16px",
-              }}
-            >
-              <h1 style={{ margin: 0, fontSize: "28px", fontWeight: 800 }}>
-                Pepův checklist
-              </h1>
-
-              <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-                <input
-                  type="date"
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  style={{
-                    padding: "12px 14px",
-                    borderRadius: "14px",
-                    border: "1px solid #cbd5e1",
-                    background: "#fff",
-                    fontSize: "16px",
-                  }}
-                />
-                <button
-                  onClick={resetDay}
-                  style={{
-                    padding: "12px 18px",
-                    borderRadius: "14px",
-                    border: "1px solid #cbd5e1",
-                    background: "#fff",
-                    fontWeight: 700,
-                    cursor: "pointer",
-                  }}
-                >
-                  Reset dne
-                </button>
-              </div>
-            </div>
-
-            <div
-              style={{
-                background: "#f3f4f6",
+                background: "#f8fafc",
                 border: "1px solid #d1d5db",
-                borderRadius: "22px",
-                padding: "16px",
-                marginBottom: "16px",
+                borderRadius: "24px",
+                padding: "18px",
+                boxShadow: "0 1px 2px rgba(0,0,0,0.03)",
               }}
             >
               <div
@@ -354,256 +318,482 @@ export default function Page() {
                   display: "flex",
                   justifyContent: "space-between",
                   gap: "12px",
+                  alignItems: "flex-start",
                   flexWrap: "wrap",
-                  marginBottom: "12px",
+                  marginBottom: "16px",
                 }}
               >
-                <div>
-                  <div style={{ fontSize: "13px", color: "#64748b" }}>Vybraný den</div>
-                  <div style={{ fontSize: "18px", fontWeight: 800 }}>
-                    {formatDateLabel(selectedDate)}
-                  </div>
+                <div style={{ flex: 1, minWidth: "260px" }}>
+                  <button
+                    onClick={() => setShowMantra((prev) => !prev)}
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      padding: 0,
+                      margin: 0,
+                      cursor: "pointer",
+                      textAlign: "left",
+                    }}
+                    title="Rozbalit mantru"
+                  >
+                    <div
+                      style={{
+                        fontSize: "28px",
+                        fontWeight: 800,
+                        lineHeight: 1.2,
+                        color: "#0f172a",
+                      }}
+                    >
+                      Tady a teď. V pravdě. V míru se sebou.
+                    </div>
+                    <div
+                      style={{
+                        marginTop: "6px",
+                        fontSize: "14px",
+                        color: "#64748b",
+                        fontWeight: 600,
+                      }}
+                    >
+                      {showMantra ? "Skrýt legendu ▲" : "Zobrazit legendu ▼"}
+                    </div>
+                  </button>
+
+                  {showMantra && (
+                    <div
+                      style={{
+                        marginTop: "14px",
+                        background: "#ffffff",
+                        border: "1px solid #d1d5db",
+                        borderRadius: "18px",
+                        padding: "16px",
+                        lineHeight: 1.6,
+                        color: "#334155",
+                        fontSize: "15px",
+                      }}
+                    >
+                      <div style={{ marginBottom: "12px" }}>
+                        <div style={{ fontWeight: 800, color: "#0f172a", marginBottom: "4px" }}>
+                          Tady a teď
+                        </div>
+                        <div>Všímám si těla, dechu, prostoru kolem sebe.</div>
+                        <div>
+                          Nedělám víc věcí najednou jen proto, abych utekl od
+                          přítomnosti.
+                        </div>
+                      </div>
+
+                      <div style={{ marginBottom: "12px" }}>
+                        <div style={{ fontWeight: 800, color: "#0f172a", marginBottom: "4px" }}>
+                          V pravdě
+                        </div>
+                        <div>
+                          Nelžu (si) o tom, jak se cítím a co skutečně potřebuju.
+                        </div>
+                        <div>
+                          Říkám (si) věci tak, jak jsou, ne jak „by měly být“.
+                        </div>
+                      </div>
+
+                      <div>
+                        <div style={{ fontWeight: 800, color: "#0f172a", marginBottom: "4px" }}>
+                          V míru se sebou
+                        </div>
+                        <div>Nepotřebuju hodnotit, srovnávat ani opravovat.</div>
+                        <div>Přijímám se i s chybami a nedokonalostí.</div>
+                        <div>
+                          Dovoluju si být takový, jaký jsem právě teď.
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                <div style={{ textAlign: "right" }}>
-                  <div style={{ fontSize: "13px", color: "#64748b" }}>Splněno</div>
-                  <div style={{ fontSize: "18px", fontWeight: 800 }}>
-                    {doneCount} / {totalCount}
-                  </div>
-                  <div style={{ fontSize: "14px", color: "#64748b" }}>
-                    Postup: {percent} %
-                  </div>
+                <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                  <input
+                    type="date"
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    style={{
+                      padding: "12px 14px",
+                      borderRadius: "14px",
+                      border: "1px solid #cbd5e1",
+                      background: "#fff",
+                      fontSize: "16px",
+                    }}
+                  />
+                  <button
+                    onClick={resetDay}
+                    style={{
+                      padding: "12px 18px",
+                      borderRadius: "14px",
+                      border: "1px solid #cbd5e1",
+                      background: "#fff",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                    }}
+                  >
+                    Reset dne
+                  </button>
                 </div>
               </div>
 
               <div
                 style={{
-                  width: "100%",
-                  height: "11px",
-                  background: "#dbe4ee",
-                  borderRadius: "999px",
-                  overflow: "hidden",
-                  marginBottom: "14px",
+                  background: "#f3f4f6",
+                  border: "1px solid #d1d5db",
+                  borderRadius: "22px",
+                  padding: "16px",
+                  marginBottom: "16px",
                 }}
               >
                 <div
                   style={{
-                    width: `${percent}%`,
-                    height: "100%",
-                    background: getBarColor(percent),
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: "12px",
+                    flexWrap: "wrap",
+                    marginBottom: "12px",
+                  }}
+                >
+                  <div>
+                    <div style={{ fontSize: "13px", color: "#64748b" }}>Vybraný den</div>
+                    <div style={{ fontSize: "18px", fontWeight: 800 }}>
+                      {formatDateLabel(selectedDate)}
+                    </div>
+                  </div>
+
+                  <div style={{ textAlign: "right" }}>
+                    <div style={{ fontSize: "13px", color: "#64748b" }}>Splněno</div>
+                    <div style={{ fontSize: "18px", fontWeight: 800 }}>
+                      {doneCount} / {totalCount}
+                    </div>
+                    <div style={{ fontSize: "14px", color: "#64748b" }}>
+                      Postup: {percent} %
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    width: "100%",
+                    height: "11px",
+                    background: "#dbe4ee",
                     borderRadius: "999px",
-                    transition: "width 0.2s ease",
+                    overflow: "hidden",
+                    marginBottom: "14px",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: `${percent}%`,
+                      height: "100%",
+                      background: getBarColor(percent),
+                      borderRadius: "999px",
+                      transition: "width 0.2s ease",
+                    }}
+                  />
+                </div>
+
+                <div
+                  style={{
+                    background: motivationStyle.bg,
+                    borderRadius: "22px",
+                    padding: "18px 16px",
+                    textAlign: "center",
+                  }}
+                >
+                  <div style={{ fontSize: "34px", marginBottom: "8px" }}>
+                    {motivationStyle.icon}
+                  </div>
+                  <div style={{ fontSize: "18px", fontWeight: 800 }}>
+                    {getMotivation(percent)}
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ display: "grid", gap: "12px" }}>
+                {tasks.map((task) => {
+                  const checked = !!selectedDayChecked[task];
+                  const isMartaTask = task.includes("Marťa");
+
+                  return (
+                    <div
+                      key={task}
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "auto 1fr auto",
+                        gap: "14px",
+                        alignItems: "center",
+                        background: checked ? "#f0fdf4" : "#f8fafc",
+                        border: checked
+                          ? "1px solid #22c55e"
+                          : "1px solid #d1d5db",
+                        borderRadius: "22px",
+                        padding: "14px 16px",
+                        transition: "all 0.15s ease",
+                      }}
+                    >
+                      <button
+                        onClick={() => toggleTask(task)}
+                        style={{
+                          width: "26px",
+                          height: "26px",
+                          borderRadius: "6px",
+                          border: checked
+                            ? "1.5px solid #16a34a"
+                            : "1.5px solid #8b8b8b",
+                          background: checked ? "#16a34a" : "#fff",
+                          color: checked ? "#fff" : "transparent",
+                          cursor: "pointer",
+                          fontWeight: 800,
+                          fontSize: "16px",
+                          lineHeight: 1,
+                        }}
+                        title="Zaškrtnout"
+                      >
+                        ✓
+                      </button>
+
+                      <div
+                        onClick={() => {
+                          if (isMartaTask) {
+                            setShowImage(true);
+                          } else {
+                            toggleTask(task);
+                          }
+                        }}
+                        style={{
+                          fontSize: "17px",
+                          fontWeight: checked ? 800 : 700,
+                          cursor: "pointer",
+                          userSelect: "none",
+                          color: checked ? "#166534" : "#0f172a",
+                        }}
+                        title={isMartaTask ? "Zobrazit cvičení" : "Zaškrtnout"}
+                      >
+                        {task}
+                        {isMartaTask && (
+                          <span
+                            style={{
+                              marginLeft: "10px",
+                              fontSize: "13px",
+                              color: "#64748b",
+                              fontWeight: 600,
+                            }}
+                          >
+                            (klik = obrázek)
+                          </span>
+                        )}
+                      </div>
+
+                      <button
+                        onClick={() => removeTask(task)}
+                        style={{
+                          width: "42px",
+                          height: "42px",
+                          borderRadius: "14px",
+                          border: "1px solid #d1d5db",
+                          background: "#fff",
+                          color: "#94a3b8",
+                          cursor: "pointer",
+                          fontSize: "18px",
+                        }}
+                        title="Smazat položku"
+                      >
+                        🗑️
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          <div style={{ minWidth: 0, display: "grid", gap: "16px" }}>
+            <div
+              style={{
+                background: "#f8fafc",
+                border: "1px solid #d1d5db",
+                borderRadius: "24px",
+                padding: "18px",
+              }}
+            >
+              <div style={{ fontSize: "18px", fontWeight: 800, marginBottom: "12px" }}>
+                Přidat položku
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "10px" }}>
+                <input
+                  value={newTask}
+                  onChange={(e) => setNewTask(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") addTask();
+                  }}
+                  placeholder="Např. Pití, cvičení"
+                  style={{
+                    padding: "14px 16px",
+                    borderRadius: "14px",
+                    border: "1px solid #cbd5e1",
+                    fontSize: "16px",
+                    outline: "none",
                   }}
                 />
-              </div>
-
-              <div
-                style={{
-                  background: motivationStyle.bg,
-                  borderRadius: "22px",
-                  padding: "18px 16px",
-                  textAlign: "center",
-                }}
-              >
-                <div style={{ fontSize: "34px", marginBottom: "8px" }}>
-                  {motivationStyle.icon}
-                </div>
-                <div style={{ fontSize: "18px", fontWeight: 800 }}>
-                  {getMotivation(percent)}
-                </div>
-              </div>
-            </div>
-
-            <div style={{ display: "grid", gap: "12px" }}>
-              {tasks.map((task) => {
-                const checked = !!selectedDayChecked[task];
-
-                return (
-                  <div
-                    key={task}
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "auto 1fr auto",
-                      gap: "14px",
-                      alignItems: "center",
-                      background: "#f8fafc",
-                      border: "1px solid #d1d5db",
-                      borderRadius: "22px",
-                      padding: "14px 16px",
-                    }}
-                  >
-                    <button
-                      onClick={() => toggleTask(task)}
-                      style={{
-                        width: "26px",
-                        height: "26px",
-                        borderRadius: "6px",
-                        border: "1.5px solid #8b8b8b",
-                        background: checked ? "#dbeafe" : "#fff",
-                        cursor: "pointer",
-                      }}
-                    />
-
-                    <div
-                      onClick={() => toggleTask(task)}
-                      style={{
-                        fontSize: "17px",
-                        fontWeight: 700,
-                        cursor: "pointer",
-                        userSelect: "none",
-                      }}
-                    >
-                      {task}
-                    </div>
-
-                    <button
-                      onClick={() => removeTask(task)}
-                      style={{
-                        width: "42px",
-                        height: "42px",
-                        borderRadius: "14px",
-                        border: "1px solid #d1d5db",
-                        background: "#fff",
-                        color: "#94a3b8",
-                        cursor: "pointer",
-                        fontSize: "18px",
-                      }}
-                      title="Smazat položku"
-                    >
-                      🗑️
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        <div style={{ minWidth: 0, display: "grid", gap: "16px" }}>
-          <div
-            style={{
-              background: "#f8fafc",
-              border: "1px solid #d1d5db",
-              borderRadius: "24px",
-              padding: "18px",
-            }}
-          >
-            <div style={{ fontSize: "18px", fontWeight: 800, marginBottom: "12px" }}>
-              Přidat položku
-            </div>
-
-            <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "10px" }}>
-              <input
-                value={newTask}
-                onChange={(e) => setNewTask(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") addTask();
-                }}
-                placeholder="Např. Pití, cvičení"
-                style={{
-                  padding: "14px 16px",
-                  borderRadius: "14px",
-                  border: "1px solid #cbd5e1",
-                  fontSize: "16px",
-                  outline: "none",
-                }}
-              />
-              <button
-                onClick={addTask}
-                style={{
-                  padding: "0 18px",
-                  borderRadius: "14px",
-                  border: "none",
-                  background: "#2563eb",
-                  color: "#fff",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                }}
-              >
-                Přidat
-              </button>
-            </div>
-          </div>
-
-          <div
-            style={{
-              background: "#f8fafc",
-              border: "1px solid #d1d5db",
-              borderRadius: "24px",
-              padding: "18px",
-            }}
-          >
-            <div style={{ fontSize: "18px", fontWeight: 800, marginBottom: "12px" }}>
-              Posledních 7 dní
-            </div>
-
-            <div style={{ display: "grid", gap: "10px" }}>
-              {last7Days.map((day) => (
                 <button
-                  key={day.key}
-                  onClick={() => setSelectedDate(day.key)}
+                  onClick={addTask}
                   style={{
-                    textAlign: "left",
-                    background: "#fff",
-                    border:
-                      selectedDate === day.key
-                        ? "2px solid #93c5fd"
-                        : "1px solid #d1d5db",
-                    borderRadius: "18px",
-                    padding: "12px",
+                    padding: "0 18px",
+                    borderRadius: "14px",
+                    border: "none",
+                    background: "#2563eb",
+                    color: "#fff",
+                    fontWeight: 700,
                     cursor: "pointer",
                   }}
                 >
-                  <div style={{ fontSize: "16px", fontWeight: 800, marginBottom: "4px" }}>
-                    {formatDateLabel(day.key)}
-                  </div>
-                  <div style={{ fontSize: "14px", color: "#64748b", marginBottom: "8px" }}>
-                    {day.done} / {day.total} splněno
-                  </div>
-                  <div
+                  Přidat
+                </button>
+              </div>
+            </div>
+
+            <div
+              style={{
+                background: "#f8fafc",
+                border: "1px solid #d1d5db",
+                borderRadius: "24px",
+                padding: "18px",
+              }}
+            >
+              <div style={{ fontSize: "18px", fontWeight: 800, marginBottom: "12px" }}>
+                Posledních 7 dní
+              </div>
+
+              <div style={{ display: "grid", gap: "10px" }}>
+                {last7Days.map((day) => (
+                  <button
+                    key={day.key}
+                    onClick={() => setSelectedDate(day.key)}
                     style={{
-                      width: "100%",
-                      height: "8px",
-                      background: "#e2e8f0",
-                      borderRadius: "999px",
-                      overflow: "hidden",
+                      textAlign: "left",
+                      background: "#fff",
+                      border:
+                        selectedDate === day.key
+                          ? "2px solid #93c5fd"
+                          : "1px solid #d1d5db",
+                      borderRadius: "18px",
+                      padding: "12px",
+                      cursor: "pointer",
                     }}
                   >
+                    <div style={{ fontSize: "16px", fontWeight: 800, marginBottom: "4px" }}>
+                      {formatDateLabel(day.key)}
+                    </div>
+                    <div style={{ fontSize: "14px", color: "#64748b", marginBottom: "8px" }}>
+                      {day.done} / {day.total} splněno
+                    </div>
                     <div
                       style={{
-                        width: `${day.pct}%`,
-                        height: "100%",
-                        background: "#cbd5e1",
+                        width: "100%",
+                        height: "8px",
+                        background: "#e2e8f0",
                         borderRadius: "999px",
+                        overflow: "hidden",
                       }}
-                    />
-                  </div>
-                </button>
-              ))}
+                    >
+                      <div
+                        style={{
+                          width: `${day.pct}%`,
+                          height: "100%",
+                          background:
+                            day.pct === 100
+                              ? "#16a34a"
+                              : day.pct > 0
+                              ? "#94a3b8"
+                              : "#cbd5e1",
+                          borderRadius: "999px",
+                        }}
+                      />
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
 
-          <div
-            style={{
-              background: "#f8fafc",
-              border: "1px solid #d1d5db",
-              borderRadius: "24px",
-              padding: "18px",
-            }}
-          >
-            <div style={{ fontSize: "18px", fontWeight: 800, marginBottom: "12px" }}>
-              Jak to funguje
-            </div>
+            <div
+              style={{
+                background: "#f8fafc",
+                border: "1px solid #d1d5db",
+                borderRadius: "24px",
+                padding: "18px",
+              }}
+            >
+              <div style={{ fontSize: "18px", fontWeight: 800, marginBottom: "12px" }}>
+                Jak to funguje
+              </div>
 
-            <div style={{ color: "#475569", fontSize: "14px", lineHeight: 1.65 }}>
-              ✓ Každý den se ukládá zvlášť.<br />
-              ✓ Data zůstávají uložená v tomto zařízení.<br />
-              ✓ Položky můžeš přidat nebo smazat.<br />
-              ✓ Nahoře je motivační věta podle postupu.
+              <div style={{ color: "#475569", fontSize: "14px", lineHeight: 1.65 }}>
+                ✓ Každý den se ukládá zvlášť.<br />
+                ✓ Data zůstávají uložená v tomto zařízení.<br />
+                ✓ Položky můžeš přidat nebo smazat.<br />
+                ✓ Na mobilu se pravý sloupec přesune pod úkoly.<br />
+                ✓ Zaškrtnuté položky zezelenají.<br />
+                ✓ U Marťi klik na text otevře obrázek.<br />
+                ✓ Zaškrtnutí Marťi děláš přes checkbox vlevo.<br />
+                ✓ Nahoře máš svou mantru a její legendu.
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </main>
+
+        {showImage && (
+          <div
+            onClick={() => setShowImage(false)}
+            style={{
+              position: "fixed",
+              inset: 0,
+              background: "rgba(0, 0, 0, 0.82)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 1000,
+              padding: "20px",
+              cursor: "pointer",
+            }}
+          >
+            <div
+              style={{
+                maxWidth: "100%",
+                maxHeight: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "12px",
+              }}
+            >
+              <img
+                src="/marta.jpg"
+                alt="Cvičení a la Marťa"
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: "80vh",
+                  borderRadius: "14px",
+                  boxShadow: "0 10px 30px rgba(0,0,0,0.35)",
+                  background: "#fff",
+                }}
+              />
+              <div
+                style={{
+                  color: "#fff",
+                  fontSize: "14px",
+                  fontWeight: 600,
+                  textAlign: "center",
+                }}
+              >
+                Klikni kamkoli pro zavření
+              </div>
+            </div>
+          </div>
+        )}
+      </main>
+    </>
   );
 }
