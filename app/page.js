@@ -393,7 +393,7 @@ export default function Page() {
                         <div style={{ fontWeight: 800, color: "#ffffff", marginBottom: "4px" }}>
                           V míru se sebou
                         </div>
-                        <div>Nepotřebuju hodnotit, srovnávat ani opravovat.</div>
+                        <div>Nepotřebuju se hodnotit, srovnávat ani opravovat.</div>
                         <div>Přijímám se i s chybami a nedokonalostí.</div>
                         <div>
                           Dovoluju si být takový, jaký jsem právě teď.
